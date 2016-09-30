@@ -2,6 +2,7 @@ package application;
 
 import org.jibble.pircbot.*;
 
+@SuppressWarnings("unused")
 public class MyBotMain {
   // private Stokenizer tokenizer;  
   //   Parser parse;

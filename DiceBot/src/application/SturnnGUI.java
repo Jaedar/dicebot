@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.URLClassLoader;
 import java.net.URL;
 
+@SuppressWarnings("unused")
 public class SturnnGUI extends JFrame implements ActionListener {
   private JButton exitButton;
   private JTextField inputField;
