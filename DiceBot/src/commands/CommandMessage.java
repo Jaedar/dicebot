@@ -1,5 +1,7 @@
 package commands;
 
+import java.util.Optional;
+
 import util.Logger;
 
 public class CommandMessage {
@@ -7,6 +9,7 @@ public class CommandMessage {
 	private final String login;
 	private final String hostname;
 	private final String message;
+	private final String channel;
 	
 	private final int COMMAND_TOKEN_LENGTH=1;
 	
@@ -15,7 +18,16 @@ public class CommandMessage {
 		this.login = login;
 		this.hostname = hostname;
 		this.message = message;
+		this.channel = null;
 		Logger.debug("Command Received" + this);
+	}
+
+	public CommandMessage(String channel, String sender, String login, String hostname, String message) {
+		this.sender= sender;
+		this.login = login;
+		this.hostname = hostname;
+		this.message = message;
+		this.channel  = channel;
 	}
 
 	public String getSender() {
@@ -35,7 +47,14 @@ public class CommandMessage {
 	}
 	
 	public String getCommand() {
+		if(message.indexOf(" ") != -1) {
 		return message.substring(COMMAND_TOKEN_LENGTH, message.indexOf(" "));
+		} 
+		return message;
+	}
+
+	public Optional<String> getChannel(){
+		return Optional.of(channel);
 	}
 
 }

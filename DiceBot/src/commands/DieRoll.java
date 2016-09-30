@@ -2,20 +2,16 @@ package commands;
 
 import util.Dice;
 
-public class Dlroll implements Command {
-	private String message; // on form ,dlroll 3d4+4
+public class DieRoll extends AbstractRollCommand {
+	private String message; // on form ,DeadlandsRoll 3d4+4
 
-	public Dlroll(String msg) {
-
-		message = msg;
-	}
-
-	public Dlroll() {
-		// TODO Auto-generated constructor stub
+	public DieRoll(CommandMessage cmd) {
+		super(cmd);
+		message = cmd.getMessage();
 	}
 
 	public String out() { // check msg is on form
-		if (!message.matches(",dlroll\\s\\d*d\\d+[+-]?\\d?.*"))
+		if (!message.matches(",roll\\s\\d*d\\d+[+-]?\\d?.*"))
 			return "error";
 
 		int n = 1;
@@ -34,7 +30,7 @@ public class Dlroll implements Command {
 			size = Integer.parseInt(s[1]);
 			mod = 0;
 		} else if (mes[1].matches("d\\d*[+-]\\d*")) { // d4+5
-			s = mes[1].split("[d\\+-]");
+			s = mes[1].split("[d+-]");
 			n = 1;
 			size = Integer.parseInt(s[1]);
 			mod = Integer.parseInt(s[2]);
@@ -57,7 +53,7 @@ public class Dlroll implements Command {
 		int sum = 0;
 		String output = "";
 		for (int i = 1; i <= n; i++) {
-			roll = die.rolle() + mod;
+			roll = die.roll() + mod;
 			sum = sum + roll;
 			if (roll > highest)
 				highest = roll;
@@ -71,6 +67,7 @@ public class Dlroll implements Command {
 				junk = junk + " " + mes[i];
 			}
 		} // "\u0002Bold\u000F and gone"
+
 		if (message.contains(" sum ") || message.endsWith(" sum"))
 			output = "\u0002" + sum + "\u000F: " + output + " " + junk + " (" + n + "d" + size + "+" + mod + ")";
 		else
@@ -80,8 +77,7 @@ public class Dlroll implements Command {
 	}
 
 	@Override
-	public String execute(CommandMessage cmd) {
-		this.message=cmd.getMessage();
+	public String execute() {
 		return out();
 	}
 

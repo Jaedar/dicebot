@@ -4,24 +4,14 @@ import org.jibble.pircbot.PircBot;
 
 import commands.CommandHandler;
 import commands.CommandMessage;
-import commands.Dlroll;
-import commands.Initiative;
-import deadlands.Bank;
-import deadlands.Deck;
-import util.Dieroll;
 import util.Filter;
 import util.Table;
 
-import java.util.*;
 import java.io.*;
-import java.io.Console;
-import java.util.regex.*;
 
 public class MyBot extends PircBot {
 	// private File[] tables;
 	private Table[] tables;
-	private Deck dek = new Deck();
-	private Bank bank = new Bank();
 
 	public MyBot(String name) {
 		this.setName(name);
@@ -37,6 +27,7 @@ public class MyBot extends PircBot {
 				System.out.println("File error");
 			}
 	}
+	
 
 	// greetings
 	public void onJoin(String channel, String sender, String login, String hostname) {
@@ -62,7 +53,7 @@ public class MyBot extends PircBot {
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {
 		if (message.startsWith(",")) {
 			CommandMessage cmd = new CommandMessage(sender, login, hostname, message);
-			CommandHandler.execute(cmd);
+			CommandHandler.execute(cmd, this);
 		}
 
 		return;
@@ -73,8 +64,8 @@ public class MyBot extends PircBot {
 		// sendMessage(channel, sender+ dice(message));
 		// }
 		if (message.startsWith(",")) {
-			CommandMessage cmd = new CommandMessage(sender, login, hostname, message);
-			CommandHandler.execute(cmd);
+			CommandMessage cmd = new CommandMessage(channel, sender, login, hostname, message);
+			CommandHandler.execute(cmd, this);
 		}
 		return;
 		// String s="";
@@ -128,13 +119,13 @@ public class MyBot extends PircBot {
 		// }
 		// }
 		// else if(message.startsWith(",")){
-		// if (message.startsWith(",dlroll")) {
-		// Dlroll d=new Dlroll(message);
+		// if (message.startsWith(",DeadlandsRoll")) {
+		// DeadlandsRoll d=new DeadlandsRoll(message);
 		// sendMessage(channel, sender+" "+d.out());
 		// return;
 		// }
 		// if (message.startsWith(",roll")) {
-		// Dieroll dd=new Dieroll(message);
+		// DieRoll dd=new DieRoll(message);
 		// sendMessage(channel, sender+" "+dd.out());
 		// return;
 		// }
