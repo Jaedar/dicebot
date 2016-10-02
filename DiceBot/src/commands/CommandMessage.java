@@ -52,6 +52,13 @@ public class CommandMessage {
 		} 
 		return message;
 	}
+	
+	public String getArguments(){
+		if(message.indexOf(" ") == -1) {
+			return "";
+		}
+		return message.substring(message.indexOf(" ")+1);
+	}
 
 	public Optional<String> getChannel(){
 		return Optional.of(channel);

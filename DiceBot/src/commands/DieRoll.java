@@ -2,7 +2,7 @@ package commands;
 
 import util.Dice;
 
-public class DieRoll extends AbstractRollCommand {
+public class DieRoll extends AbstractTestCommand {
 	private String message; // on form ,DeadlandsRoll 3d4+4
 
 	public DieRoll(CommandMessage cmd) {

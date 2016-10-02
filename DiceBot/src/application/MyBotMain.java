@@ -35,7 +35,7 @@ public class MyBotMain {
       //bot.joinChannel("#rpgcodex");
       
       // Load table from txts
-      bot.load("D:/DrJava/ircbot");
+      bot.load("../Resources/Tables");
     }
     
 }

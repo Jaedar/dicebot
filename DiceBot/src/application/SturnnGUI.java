@@ -14,7 +14,11 @@ import java.net.URL;
 
 @SuppressWarnings("unused")
 public class SturnnGUI extends JFrame implements ActionListener {
-  private JButton exitButton;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private JButton exitButton;
   private JTextField inputField;
  private JButton startButton;
  private JTextArea textArea;

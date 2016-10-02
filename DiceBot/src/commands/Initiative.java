@@ -1,7 +1,5 @@
 package commands;
 
-import java.util.*;
-
 import deadlands.Deck;
 import util.Dice;
 public class Initiative{

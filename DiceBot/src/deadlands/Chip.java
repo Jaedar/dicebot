@@ -9,7 +9,6 @@ private int value; // 50 white, 25 red, 10 blue
  }
  
  public String toString() {
-   String s="";
    if (value == 50)
      return "White Chip";
    if (value == 25)

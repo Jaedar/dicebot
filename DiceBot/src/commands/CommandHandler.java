@@ -20,7 +20,7 @@ public class CommandHandler {
 		
 		try {
 		String cmdReturn = getCommand(parse(cmd), cmd).execute();
-		bot.sendMessage(target,cmd.getSender()+ ": "+  cmdReturn);
+		bot.sendMessage(target,cmdReturn);
 		} catch (Exception e) {
 			e.printStackTrace();
 			bot.sendMessage(target, "Unhandled error occurred for command");

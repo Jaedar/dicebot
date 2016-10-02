@@ -1,25 +1,51 @@
 package commands;
 
+import util.Dice;
 
-public class EclipsePhaseRoll extends AbstractRollCommand {
+public class EclipsePhaseRoll extends AbstractTestCommand {
 
-	private final int targetNumber;
-	
-	
 	@Override
 	public String execute() {
-		// TODO Auto-generated method stub
-		return null;
+		int roll = new Dice(100).roll() - 1;
+
+		// failure
+		if (roll > (getTargetNumber() + getModifier()) || roll == 99) {
+			if (isCrit(roll)) {
+				return getSender() + ":" + roll + " CRITICAL Failure!"+ commentOutput();
+			}
+			int margin = roll - getTargetNumber();
+			if (margin >= 30) {
+				return getSender() + ":" + roll + " Severe Failure!"+ commentOutput();
+			}
+			return getSender() + ":" + roll + " failure with MoF " + margin + " for"+ commentOutput();
+		}
+
+		// success
+		if (isCrit(roll)) {
+			return getSender() + ":" + roll + " CRITICAL Success! for"+ commentOutput();
+		}
+		int margin = roll;
+		if (margin >= 30) {
+			return getSender() + ":" + roll + " Excellent Success! for"+ commentOutput();
+		}
+		return getSender() + ":" + roll + " Success with MoS " + margin + " for"+ commentOutput();
+
+	}
+
+	// format: ,eproll TN mods text mods text
+	public EclipsePhaseRoll(CommandMessage cmd) throws IllegalArgumentException {
+		super(cmd);
+	}
+
+	private boolean isCrit(int roll) {
+		return roll % 11 == 0;
 	}
 	
-	
-	// format: ,eproll TN mods text mods text
-	public EclipsePhaseRoll(CommandMessage cmd) throws IllegalArgumentException{
-		super(cmd);
-		try {targetNumber = Integer.valueOf(cmd.getMessage().split("\\s", 2)[2]);} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(e);
+	private String commentOutput(){
+		if (getComment().equals("")) {
+			return ".";
 		}
-		
+		return " for "+getComment().trim()+".";
 	}
 
 }
