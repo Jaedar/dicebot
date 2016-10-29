@@ -1,40 +1,67 @@
 package commands;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import application.MyBot;
+import util.Filter;
 import util.Logger;
+import util.Table;
 
 public class CommandHandler {
 
-	private static DefaultCommand defaultCommand;
-	
-	public static void execute(CommandMessage cmd, MyBot bot) {
+	private Map<String, Table> tables;
+
+	public void load(String dir) {
+		tables = new HashMap<String, Table>();
+		
+		File[] fil = Filter.finder(dir);
+		
+		for (File file : fil) {
+			try {
+				Table table= new Table(file);
+				tables.putIfAbsent(table.getName().toUpperCase(), table );
+			} catch (IOException e) {
+				Logger.warning("Unable to load file " + file.getName());
+			}
+			Logger.debug("Loaded command table: " + file.getName());
+		}
+	}
+
+	private static DefaultCommand defaultCommand = new DefaultCommand();
+
+	public void execute(CommandMessage cmd, MyBot bot) {
 		String target;
 		Optional<String> channel = cmd.getChannel();
 		if (channel.isPresent()) {
 			target = channel.get();
 		} else {
-			target=cmd.getSender();
+			target = cmd.getSender();
 		}
-		
+
 		try {
-		String cmdReturn = getCommand(parse(cmd), cmd).execute();
-		bot.sendMessage(target,cmdReturn);
+			String cmdReturn = getCommand(parse(cmd), cmd).execute();
+			bot.sendMessage(target, cmdReturn);
 		} catch (Exception e) {
 			e.printStackTrace();
 			bot.sendMessage(target, "Unhandled error occurred for command");
 		}
 	}
 
-	private static String parse(CommandMessage cmd) {
+	private String parse(CommandMessage cmd) {
 		String command = cmd.getCommand();
 		Logger.debug("Command Parsed as: " + command);
 		return command;
 	}
 
-	private static Command getCommand(String s, CommandMessage cmd) {
-		s=s.toUpperCase();
+	private Command getCommand(String s, CommandMessage cmd) {
+		s = s.toUpperCase();
+		if (tables.containsKey(s)) {
+			return new TableCommand(cmd, tables.get(s));
+		}
 		switch (s) {
 		case "DLROLL":
 			return new DeadlandsRoll(cmd);
@@ -45,7 +72,13 @@ public class CommandHandler {
 		default:
 			return defaultCommand;
 		}
-		
+		// for (int i=0; i<tables.length; i++){
+		// if( s.startsWith(","+tables[i].getName())){
+		// sendMessage(sender, tables[i].get());
+		// return;
+		// }
+		// }
+		//
 
 		// if (s.startsWith(",dldraw")){
 		// if (s.matches(",dldraw\\s*\\d+")){
@@ -75,16 +108,10 @@ public class CommandHandler {
 		// sendMessage(sender, "New Deck is shuffled and ready");
 		// return;
 		// }
-		// else {
-		// for (int i=0; i<tables.length; i++){
-		// if( s.startsWith(","+tables[i].getName())){
-		// sendMessage(sender, tables[i].get());
-		// return;
-		// }
+
 		//
 		// }
 		// }
 	}
-	
-	
+
 }

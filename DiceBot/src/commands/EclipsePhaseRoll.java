@@ -17,7 +17,7 @@ public class EclipsePhaseRoll extends AbstractTestCommand {
 			if (margin >= 30) {
 				return getSender() + ":" + roll + " Severe Failure!"+ commentOutput();
 			}
-			return getSender() + ":" + roll + " failure with MoF " + margin + " for"+ commentOutput();
+			return getSender() + ":" + roll + " failure with MoF " + margin + commentOutput();
 		}
 
 		// success
@@ -28,7 +28,7 @@ public class EclipsePhaseRoll extends AbstractTestCommand {
 		if (margin >= 30) {
 			return getSender() + ":" + roll + " Excellent Success! for"+ commentOutput();
 		}
-		return getSender() + ":" + roll + " Success with MoS " + margin + " for"+ commentOutput();
+		return getSender() + ":" + roll + " Success with MoS " + margin +  commentOutput();
 
 	}
 

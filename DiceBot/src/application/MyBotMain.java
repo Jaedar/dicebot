@@ -2,6 +2,8 @@ package application;
 
 import org.jibble.pircbot.*;
 
+import commands.CommandHandler;
+
 @SuppressWarnings("unused")
 public class MyBotMain {
   // private Stokenizer tokenizer;  
@@ -10,8 +12,16 @@ public class MyBotMain {
      //tokenizer = new Stokenizer();
    //  parse = new Parser(tokenizer);
       String name="General_Sturnn";
+    
+      
+      // Load table from txts
+      CommandHandler cmdh = new CommandHandler();
+      cmdh.load("E:/gitrepos/dicebot/DiceBot/Resources/Tables");
+      
+      
       // Now start our bot up.
-      MyBot bot = new MyBot(name);
+      MyBot bot = new MyBot(name, cmdh);
+      
       
       // Enable debugging output.
       bot.setVerbose(true);
@@ -33,9 +43,10 @@ public class MyBotMain {
       bot.joinChannel("#codexdh");
       //bot.joinChannel("#codexdl");
       //bot.joinChannel("#rpgcodex");
+      bot.joinChannel("#codexep");
       
-      // Load table from txts
-      bot.load("../Resources/Tables");
+    
+      
     }
     
 }

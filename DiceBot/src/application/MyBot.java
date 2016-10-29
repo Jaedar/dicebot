@@ -4,30 +4,18 @@ import org.jibble.pircbot.PircBot;
 
 import commands.CommandHandler;
 import commands.CommandMessage;
-import util.Filter;
-import util.Table;
-
-import java.io.*;
 
 public class MyBot extends PircBot {
-	// private File[] tables;
-	private Table[] tables;
-
-	public MyBot(String name) {
-		this.setName(name);
-	}
-
-	public void load(String dir) {
-		File[] fil = Filter.finder(dir);
-		tables = new Table[fil.length];
-		for (int i = 0; i < fil.length; i++)
-			try {
-				tables[i] = new Table(fil[i]);
-			} catch (IOException e) {
-				System.out.println("File error");
-			}
-	}
 	
+	private final CommandHandler cmdHandler;
+
+	public MyBot(String name, CommandHandler cmdh) {
+		this.setName(name);
+		cmdHandler= cmdh;
+		
+	}
+
+
 
 	// greetings
 	public void onJoin(String channel, String sender, String login, String hostname) {
@@ -52,8 +40,8 @@ public class MyBot extends PircBot {
 	@Override
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {
 		if (message.startsWith(",")) {
-			CommandMessage cmd = new CommandMessage(sender, login, hostname, message);
-			CommandHandler.execute(cmd, this);
+			CommandMessage cmd = new CommandMessage(sender, login, hostname,  message.substring(1));
+			cmdHandler.execute(cmd, this);
 		}
 
 		return;
@@ -64,8 +52,8 @@ public class MyBot extends PircBot {
 		// sendMessage(channel, sender+ dice(message));
 		// }
 		if (message.startsWith(",")) {
-			CommandMessage cmd = new CommandMessage(channel, sender, login, hostname, message);
-			CommandHandler.execute(cmd, this);
+			CommandMessage cmd = new CommandMessage(channel, sender, login, hostname, message.substring(1));
+			cmdHandler.execute(cmd, this);
 		}
 		return;
 		// String s="";

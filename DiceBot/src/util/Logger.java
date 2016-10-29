@@ -8,7 +8,11 @@ public class Logger {
 	}
 
 	public static void debug(String string) {
-		System.out.println("DEBUG:" + string);
+		System.out.println("DEBUG: " + string);
 		
+	}
+	
+	public static void warning(String s){
+		System.out.println("WARNING: " + s);
 	}
 }

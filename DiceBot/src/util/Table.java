@@ -3,6 +3,7 @@ package util;
 import java.util.*;
 import java.io.*;
 
+// TODO use streams for this class like a bauz
 
 // Table class
 public class Table {
@@ -14,6 +15,10 @@ public class Table {
   Scanner scan;
   int size;
   String name;
+  
+  public Table(){
+	  
+  }
   
   // Constructor, this gets a file from higher up in program
   public Table(File input)  throws IOException{
@@ -44,6 +49,7 @@ public class Table {
     
     return rows.get(n);
   }
+  
   // gets a random line weighted equally
   public String get(){
    
