@@ -48,7 +48,7 @@ public class CommandMessage {
 	
 	public String getCommand() {
 		if(message.indexOf(" ") != -1) {
-		return message.substring(COMMAND_TOKEN_LENGTH, message.indexOf(" "));
+			return message.substring(0, message.indexOf(" "));
 		} 
 		return message;
 	}
@@ -61,7 +61,7 @@ public class CommandMessage {
 	}
 
 	public Optional<String> getChannel(){
-		return Optional.of(channel);
+		return Optional.ofNullable(channel);
 	}
 
 }

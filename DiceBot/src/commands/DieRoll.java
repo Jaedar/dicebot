@@ -11,7 +11,7 @@ public class DieRoll extends AbstractTestCommand {
 	}
 
 	public String out() { // check msg is on form
-		if (!message.matches(",roll\\s\\d*d\\d+[+-]?\\d?.*"))
+		if (!message.matches("roll\\s\\d*d\\d+[+-]?\\d?.*"))
 			return "error";
 
 		int n = 1;
@@ -52,13 +52,21 @@ public class DieRoll extends AbstractTestCommand {
 		int roll;
 		int sum = 0;
 		String output = "";
-		for (int i = 1; i <= n; i++) {
-			roll = die.roll() + mod;
+		
+		int[] rolls = new int[n];
+		
+		for (int i = 0; i < n; i++) {
+			roll = die.roll() ;
+			rolls[i]=roll;
 			sum = sum + roll;
 			if (roll > highest)
 				highest = roll;
 			output = output + roll + ",";
 		}
+		// add mod to the final roll
+		highest= highest + mod;
+		sum = sum + mod;
+		
 		String junk = "";
 		if (mes.length < 3)
 			junk = "";

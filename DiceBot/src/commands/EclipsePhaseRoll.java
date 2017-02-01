@@ -22,11 +22,11 @@ public class EclipsePhaseRoll extends AbstractTestCommand {
 
 		// success
 		if (isCrit(roll)) {
-			return getSender() + ":" + roll + " CRITICAL Success! for"+ commentOutput();
+			return getSender() + ":" + roll + " CRITICAL Success!"+ commentOutput();
 		}
 		int margin = roll;
 		if (margin >= 30) {
-			return getSender() + ":" + roll + " Excellent Success! for"+ commentOutput();
+			return getSender() + ":" + roll + " Excellent Success!"+ commentOutput();
 		}
 		return getSender() + ":" + roll + " Success with MoS " + margin +  commentOutput();
 
