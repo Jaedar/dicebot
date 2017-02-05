@@ -1,92 +1,117 @@
 package commands;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import util.Dice;
 
 public class DieRoll extends AbstractTestCommand {
-	private String message; // on form ,DeadlandsRoll 3d4+4
+	private CommandMessage message; // on form ,Roll 3d4+4+2d2+d10-24-2d4
 
 	public DieRoll(CommandMessage cmd) {
 		super(cmd);
-		message = cmd.getMessage();
+		message = cmd;
 	}
 
 	public String out() { // check msg is on form
-		if (!message.matches("roll\\s\\d*d\\d+[+-]?\\d?.*"))
-			return "error";
 
-		int n = 1;
-		int size = 6;
-		int mod = 0;
-		String[] mes = message.split("\\s"); // [,droll][3d4+4][junk]
-		String[] s;
-		if (mes[1].matches("d\\d*")) { // d4
-			s = mes[1].split("d");
-			n = 1;
-			size = Integer.parseInt(s[1]);
-			mod = 0;
-		} else if (mes[1].matches("\\d*d\\d*")) { // 3d4
-			s = mes[1].split("d");
-			n = Integer.parseInt(s[0]);
-			size = Integer.parseInt(s[1]);
-			mod = 0;
-		} else if (mes[1].matches("d\\d*[+-]\\d*")) { // d4+5
-			s = mes[1].split("[d+-]");
-			n = 1;
-			size = Integer.parseInt(s[1]);
-			mod = Integer.parseInt(s[2]);
-			if (mes[1].matches(".*-.*")) {
-				mod = mod * -1;
-			}
-		} else if (mes[1].matches("\\d*d\\d*[+-]\\d*")) { // 3d4+4
-			s = mes[1].split("[d\\+-]");
-			n = Integer.parseInt(s[0]);
-			size = Integer.parseInt(s[1]);
-			mod = Integer.parseInt(s[2]);
-			if (mes[1].matches(".*-.*")) {
-				mod = mod * -1;
-			}
-		}
-
-		Dice die = new Dice(size);
-		int highest = -4000;
-		int roll;
-		int sum = 0;
-		String output = "";
-		
-		int[] rolls = new int[n];
-		
-		for (int i = 0; i < n; i++) {
-			roll = die.roll() ;
-			rolls[i]=roll;
-			sum = sum + roll;
-			if (roll > highest)
-				highest = roll;
-			output = output + roll + ",";
-		}
-		// add mod to the final roll
-		highest= highest + mod;
-		sum = sum + mod;
-		
+		String[] args = message.getArguments().split("(?=[+-])");
 		String junk = "";
-		if (mes.length < 3)
-			junk = "";
-		else {
-			for (int i = 2; i < mes.length; i++) {
-				junk = junk + " " + mes[i];
+		int modTotal = 0;
+
+		Dices dices = new Dices();
+		ArrayList<Dices> positiveDice = new ArrayList<>();
+		ArrayList<Dices> negativeDice = new ArrayList<>();
+
+		for (String string : args) {
+			// constant or junk
+			if (!string.contains("d")) {
+				try {
+					modTotal = modTotal + Integer.parseInt(string);
+				} catch (NumberFormatException e) {
+					junk = junk + string;
+				}
+			} else if (string.matches("[+-]?\\d+d\\d+")) { // starts with plus
+															// or minus (maybe)
+															// followed by one
+															// or more digits
+															// then a d, then
+															// one or more
+															// digits
+				if (string.startsWith("-")) {
+					negativeDice.add(dices.parseDice(string.substring(1)));
+				} else if (string.startsWith("+")) {
+					positiveDice.add(dices.parseDice(string.substring(1)));
+				} else {
+					positiveDice.add(dices.parseDice(string));
+				}
+			} else {
+				junk = junk + string;
 			}
-		} // "\u0002Bold\u000F and gone"
-
-		if (message.contains(" sum ") || message.endsWith(" sum"))
-			output = "\u0002" + sum + "\u000F: " + output + " " + junk + " (" + n + "d" + size + "+" + mod + ")";
-		else
-			output = "\u0002" + highest + "\u000F: " + output + " " + junk + " (" + n + "d" + size + "+" + mod + ")";
-		return output;
-
+			
+		}
+		
+		
+		int highest = Integer.MIN_VALUE;
+		
+		Iterator<Dices> iter = negativeDice.iterator();
+		while(iter.hasNext()){
+			
+		}
+		
+		/*
+		 * if (message.contains(" sum ") || message.endsWith(" sum")) output =
+		 * "\u0002" + sum + "\u000F: " + output + " " + junk + " (" + n + "d" +
+		 * size + "+" + mod + ")"; else output = "\u0002" + highest + "\u000F: "
+		 * + output + " " + junk + " (" + n + "d" + size + "+" + mod + ")";
+		 * return output;
+		 */
+		return "";
 	}
+
 
 	@Override
 	public String execute() {
 		return out();
 	}
 
+	public static void main(String[] args) {
+		DieRoll dr = new DieRoll(new CommandMessage("", "", "", ",Roll 3d4+4+2d2+d10-24-2d4"));
+
+		dr.out();
+	}
+
+	class Dices {
+		private int num;
+		private Dice dice;
+
+		Dices(int num, int size) {
+			this.num = num;
+			dice = new Dice(size);
+		}
+
+		Dices() {
+
+		}
+
+		Dices parseDice(String string) {
+			String[] numbers = string.split("d");
+			if (numbers.length == 1) {
+				return new Dices(1, Integer.parseInt(numbers[0]));
+			} else if (numbers.length == 2) {
+				return new Dices(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]));
+			}
+
+			return null;
+		}
+
+		List<Integer> roll() {
+			ArrayList<Integer> result = new ArrayList<>();
+			for (int i = 0; i < num; i++) {
+				result.add(dice.roll());
+			}
+			return result;
+		}
+	}
 }
