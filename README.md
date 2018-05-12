@@ -10,5 +10,8 @@ Example commands:
 
 # Acknowledgements
 pircbot (https://mvnrepository.com/artifact/pircbot/pircbot)
+
 Some tables are taken from https://1d4chan.org/wiki/Servitor_Bot
+
 Table contents that come from various pnp rpg's are the property of their respective rightsholders. 
+
