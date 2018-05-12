@@ -8,6 +8,10 @@ Example commands:
 ,roll 1d10+3d15+20-13
 ,div
 
+# How to build
+Have maven and jdk installed and configured.
+Run mvn package or other appropriate command. 
+
 # Acknowledgements
 pircbot (https://mvnrepository.com/artifact/pircbot/pircbot)
 
