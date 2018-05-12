@@ -1,0 +1,5 @@
+#Stored chip amounts for Deadlands
+#Sun Apr 30 22:49:10 CEST 2017
+blue=9
+white=46
+red=23
