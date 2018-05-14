@@ -19,7 +19,7 @@ public class CommandHandler {
 	private Map<String, Table> tables;
 
 	public void loadTables(String dir) {
-		tables = new HashMap<String, Table>();
+		tables = new HashMap<>();
 
 		File[] fil = Filter.finder(dir);
 
@@ -43,11 +43,7 @@ public class CommandHandler {
 	public void execute(CommandMessage cmd, MyBot bot) {
 		String target;
 		Optional<String> channel = cmd.getChannel();
-		if (channel.isPresent()) {
-			target = channel.get();
-		} else {
-			target = cmd.getSender();
-		}
+        target = channel.orElseGet(cmd::getSender);
 
 		try {
 			String cmdReturn = getCommand(parse(cmd), cmd).execute();
@@ -59,7 +55,7 @@ public class CommandHandler {
 	}
 
 	private String parse(CommandMessage cmd) {
-		String command = cmd.getCommand();
+		String command = cmd.getCommand().toUpperCase();
 		Logger.debug("Command Parsed as: " + command);
 		return command;
 	}
@@ -68,23 +64,26 @@ public class CommandHandler {
 		if (tables.containsKey(s.toUpperCase())) {
 			return new TableCommand(cmd, tables.get(s));
 		}
-
-		switch (CommandNames.valueOf(s.toUpperCase())) {
-            case DLROLL:
-                return new DeadlandsRoll(cmd);
-            case ROLL:
-                return new DieRoll(cmd);
-            case EPROLL:
-                return new EclipsePhaseRoll(cmd);
-            case DLDRAW:
-                return new DeadlandsDraw(cmd);
-            case DLNEWDECK:
-                return new DeadlandsNewDeck(cmd);
-            case DLINIT:
-                return new DeadlandsInitiative(cmd);
-            case DLCHIP:
-                return new DeadlandsChip(cmd);
-            default:
+		try {
+			switch (CommandNames.valueOf(s.toUpperCase())) {
+				case DLROLL:
+					return new DeadlandsRoll(cmd);
+				case ROLL:
+					return new DieRoll(cmd);
+				case EPROLL:
+					return new EclipsePhaseRoll(cmd);
+				case DLDRAW:
+					return new DeadlandsDraw(cmd);
+				case DLNEWDECK:
+					return new DeadlandsNewDeck(cmd);
+				case DLINIT:
+					return new DeadlandsInitiative(cmd);
+				case DLCHIP:
+					return new DeadlandsChip(cmd);
+				default:
+					return defaultCommand;
+			}
+		} catch (IllegalArgumentException e) {
 			return defaultCommand;
 		}
 
